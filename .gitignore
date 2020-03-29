@@ -9,3 +9,6 @@
 .cxx
 gradlew
 gradlew.bat
+app/release/output.json
+app/release/app-release.apk
+app/release/app-release.aab

@@ -57,7 +57,7 @@ public class CaptureManager implements View.OnClickListener {
 
             String result = "Ein Fehler ist aufgetreten.";
             try {
-                result = new WebRequest(new URL("https://wlan.dev.k118.de/entry/?trainID=" + MainActivity.getInstance().inpBahnID.getText().toString() + "&catchMacQuery=" + URLEncoder.encode(pushData.toString()))).doInBackground();
+                result = new WebRequest(new URL("https://wlan.dev.k118.de/entry/?trainID=" + MainActivity.getInstance().inpBahnID.getText().toString() + "&catchMacQuery=" + URLEncoder.encode(pushData.toString())), "").doInBackground();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
