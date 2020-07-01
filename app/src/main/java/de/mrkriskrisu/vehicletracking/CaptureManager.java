@@ -37,8 +37,6 @@ public class CaptureManager implements View.OnClickListener {
             System.out.println(results);
             System.out.println(results.size());
 
-            String query = "";
-
             JSONObject pushData = new JSONObject();
 
             for (ScanResult scanResult : results) {
@@ -49,8 +47,6 @@ public class CaptureManager implements View.OnClickListener {
                 } catch(JSONException e) {
 
                 }
-
-                query += "{\"bssid\": \""+scanResult.BSSID + "\", \"ssid\": \""+ URLEncoder.encode(scanResult.SSID) +"\"}";
             }
 
             System.out.println(pushData.toString());
