@@ -19,13 +19,16 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
+import de.mrkriskrisu.vehicletracking.tasks.ScanTask;
+
 import static de.mrkriskrisu.vehicletracking.MainActivity.wifiManager;
 
 public class CaptureManager implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        scanWifi();
+        MainActivity.getInstance().runOnUiThread(new ScanTask());
+        //scanWifi();
     }
 
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
@@ -53,19 +56,13 @@ public class CaptureManager implements View.OnClickListener {
 
             String result = "Ein Fehler ist aufgetreten.";
             try {
-                result = new WebRequest(new URL("https://wlan.dev.k118.de/entry/?trainID=" + MainActivity.getInstance().inpBahnID.getText().toString() + "&catchMacQuery=" + URLEncoder.encode(pushData.toString())), "").doInBackground();
+                result = new WebRequest(new URL("https://verkehrstracking.de/entry/?trainID=" + MainActivity.getInstance().inpBahnID.getText().toString() + "&catchMacQuery=" + URLEncoder.encode(pushData.toString())), "").doInBackground();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
-            builder.setMessage(result)
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //do things
-                        }
-                    });
+            builder.setMessage(result).setPositiveButton("OK", null);
             AlertDialog alert = builder.create();
             alert.show();
             MainActivity.buttonScan.setEnabled(true);

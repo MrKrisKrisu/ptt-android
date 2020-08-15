@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class WebRequest extends AsyncTask<String, Void, String> {
+public class WebRequest extends AsyncTask<String, Void, String> {
 
     private URL url;
     private String body;
@@ -24,7 +24,7 @@ class WebRequest extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    public String doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         String result = "";
 

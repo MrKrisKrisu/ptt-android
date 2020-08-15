@@ -9,7 +9,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bitte beachten: Diese App ist ein aktuelles Experiment. Es können nur Stadtbahnen der Typen TW2000 und TW3000 lokalisiert werden. Aufgrund von fehlenden Daten können bislang nicht alle Fahrzeuge erkannt werden, daher kommt es häufiger noch zu falschen Angaben." />
+        android:text="Diese App lokalisiert Fahrzeuge des öffentlichen Verkehrs. Aktuell werden nur Fahrzeuge der Verkehrsbetriebe in Hannover unterstützt." />
 
 
     <EditText
@@ -26,6 +26,11 @@
         android:background="@color/colorPrimary"
         android:text="Daten erfassen" />
 
+    <TextView
+        android:id="@+id/tv_captureResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="" />
     <Button
         android:id="@+id/btnLocate"
         android:layout_width="match_parent"
@@ -34,6 +39,7 @@
         android:layout_margin="15dp"
         android:background="@color/colorPrimary"
         android:text="Lokalisieren"/>
+
 
     <Space
         android:layout_width="match_parent"
