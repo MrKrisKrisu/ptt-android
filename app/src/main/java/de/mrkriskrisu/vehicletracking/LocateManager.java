@@ -1,5 +1,6 @@
 package de.mrkriskrisu.vehicletracking;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,18 +29,25 @@ import static de.mrkriskrisu.vehicletracking.MainActivity.wifiManager;
 
 
 public class LocateManager implements View.OnClickListener {
+    @NotNull
+    private MainActivity mainActivity;
+
+    public LocateManager(@NotNull MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
     @Override
     public void onClick(View v) {
-        MainActivity.getInstance().registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        mainActivity.registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         wifiManager.startScan();
-        Toast.makeText(MainActivity.getInstance(), "Fahrzeuge werden lokalisiert...", Toast.LENGTH_SHORT).show();
-        MainActivity.buttonLocate.setEnabled(false);
+        Toast.makeText(mainActivity, "Fahrzeuge werden lokalisiert...", Toast.LENGTH_SHORT).show();
+        mainActivity.buttonLocate.setEnabled(false);
     }
 
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            MainActivity.getInstance().unregisterReceiver(this);
+            mainActivity.unregisterReceiver(this);
             try {
                 String jsonQuery = parseJsonRequest(wifiManager.getScanResults());
 
@@ -53,7 +62,7 @@ public class LocateManager implements View.OnClickListener {
                             JSONArray possible = (JSONArray) response.get("possible");
 
                             if (verified.length() == 0 && possible.length() == 0) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
                                 builder.setMessage("Es konnten keine Fahrzeuge mit 100%iger Wahrscheinlichkeit identifiert werden.")
                                         .setPositiveButton("OK", null);
                                 builder.create().show();
@@ -64,9 +73,9 @@ public class LocateManager implements View.OnClickListener {
                             if (verified.length() > 0) {
                                 message.append("Folgende Fahrzeuge wurde eindeutig gefunden: \n");
                                 for (int i = 0; i < verified.length(); i++) {
-                                    message.append(" - " + verified.get(i).toString() + "\n");
+                                    message.append(" - ").append(verified.get(i).toString()).append("\n");
 
-                                    VehicleFoundEvent.trigger(new Vehicle(verified.get(i).toString()));
+                                    new VehicleFoundEvent(mainActivity).trigger(new Vehicle(verified.get(i).toString()));
                                 }
                             }
 
@@ -76,12 +85,14 @@ public class LocateManager implements View.OnClickListener {
                             if (possible.length() > 0) {
                                 message.append("Folgende Fahrzeuge könnten noch in deiner Umgebung sein: \n");
                                 for (int i = 0; i < possible.length(); i++) {
-                                    message.append(" - ");
-                                    message.append(possible.get(i).toString() + "\n");
+                                    message
+                                        .append(" - ")
+                                        .append(possible.get(i).toString())
+                                        .append("\n");
                                 }
                             }
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
                             builder.setMessage(message).setPositiveButton("OK", null).create().show();
 
                         } catch (JSONException e) {
@@ -91,12 +102,11 @@ public class LocateManager implements View.OnClickListener {
 
                     @Override
                     public void onFinish() {
-                        MainActivity.buttonLocate.setEnabled(true);
+                        mainActivity.buttonLocate.setEnabled(true);
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                return;
             }
         }
     };

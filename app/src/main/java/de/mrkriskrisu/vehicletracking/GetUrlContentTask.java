@@ -20,11 +20,12 @@ public class GetUrlContentTask extends AsyncTask<String, Integer, String> {
             connection.setReadTimeout(5000);
             connection.connect();
             BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String content = "", line;
+            StringBuilder content = new StringBuilder();
+            String line;
             while ((line = rd.readLine()) != null) {
-                content += line + "\n";
+                content.append(line).append("\n");
             }
-            return content;
+            return content.toString();
         }catch(Exception e) {
             e.printStackTrace();
         }
@@ -37,6 +38,5 @@ public class GetUrlContentTask extends AsyncTask<String, Integer, String> {
     protected void onPostExecute(String result) {
         // this is executed on the main thread after the process is over
         // update your UI here
-        Toast.makeText(MainActivity.getInstance(), result,  Toast.LENGTH_LONG);
     }
 }
