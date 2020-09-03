@@ -30,9 +30,12 @@ import static de.mrkriskrisu.vehicletracking.MainActivity.wifiManager;
 public class LocateManager implements View.OnClickListener {
     @NotNull
     private MainActivity mainActivity;
+    @NotNull
+    private VehicleFoundEvent vehicleFoundEvent;
 
     public LocateManager(@NotNull MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+        this.vehicleFoundEvent = new VehicleFoundEvent(this.mainActivity);
     }
 
     @Override
@@ -43,7 +46,7 @@ public class LocateManager implements View.OnClickListener {
         mainActivity.buttonLocate.setEnabled(false);
     }
 
-    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             mainActivity.unregisterReceiver(this);
@@ -74,7 +77,7 @@ public class LocateManager implements View.OnClickListener {
                                 for (int i = 0; i < verified.length(); i++) {
                                     message.append(" - ").append(verified.get(i).toString()).append("\n");
 
-                                    new VehicleFoundEvent(mainActivity).trigger(new Vehicle(verified.get(i).toString()));
+                                    vehicleFoundEvent.trigger(new Vehicle(verified.get(i).toString()));
                                 }
                             }
 
@@ -85,9 +88,9 @@ public class LocateManager implements View.OnClickListener {
                                 message.append("Folgende Fahrzeuge könnten noch in deiner Umgebung sein: \n");
                                 for (int i = 0; i < possible.length(); i++) {
                                     message
-                                        .append(" - ")
-                                        .append(possible.get(i).toString())
-                                        .append("\n");
+                                            .append(" - ")
+                                            .append(possible.get(i).toString())
+                                            .append("\n");
                                 }
                             }
 
