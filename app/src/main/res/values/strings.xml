@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Vehicletracking</string>
+    <string name="main_intro">Diese App lokalisiert Fahrzeuge des öffentlichen Verkehrs. Aktuell werden nur Fahrzeuge der Verkehrsbetriebe in Hannover unterstützt.</string>
+    <string name="submit_data">Daten erfassen</string>
+    <string name="locate">Lokalisieren</string>
+    <string name="main_disclaimer">Diese App steht in keinem Zusammenhang mit den Unternehmen GVH, Üstra oder RegioBus. Dies ist ein reines Privatprojekt.</string>
+    <string name="enter_vehicle_name">Fahrzeugnummer eingeben</string>
 </resources>
