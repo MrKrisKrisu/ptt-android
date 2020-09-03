@@ -36,29 +36,34 @@ import static de.mrkriskrisu.vehicletracking.MainActivity.wifiManager;
 public class ScanTask implements Runnable {
 
     private Location resultLocation;
+    private MainActivity mainActivity;
+
+    public ScanTask(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     @Override
     public void run() {
-        final TextView tv = MainActivity.getInstance().findViewById(R.id.tv_captureResult);
+        final TextView tv = mainActivity.findViewById(R.id.tv_captureResult);
         tv.setText("Signale werden empfangen...");
 
 
-        Toast.makeText(MainActivity.getInstance(), "Daten werden aufgenommen, bitte warten...", Toast.LENGTH_SHORT).show();
-        MainActivity.buttonScan.setEnabled(false);
+        Toast.makeText(mainActivity, "Daten werden aufgenommen, bitte warten...", Toast.LENGTH_SHORT).show();
+        mainActivity.buttonScan.setEnabled(false);
 
-        MainActivity.getInstance().registerReceiver(new BroadcastReceiver() {
+        mainActivity.registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 final List<ScanResult> resultWifi = wifiManager.getScanResults();
-                MainActivity.getInstance().unregisterReceiver(this);
+                mainActivity.unregisterReceiver(this);
 
                 System.out.println(resultWifi);
                 System.out.println(resultWifi.size());
 
                 tv.setText("Location wird abgefragt...");
 
-                if (ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+                if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
                     builder.setMessage("Fehler (L1)")
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -72,8 +77,8 @@ public class ScanTask implements Runnable {
                     tv.setText("Fehler");
                     return;
                 }
-                LocationServices.getFusedLocationProviderClient(MainActivity.getInstance()).getLastLocation()
-                        .addOnSuccessListener(MainActivity.getInstance(), new OnSuccessListener<Location>() {
+                LocationServices.getFusedLocationProviderClient(mainActivity).getLastLocation()
+                        .addOnSuccessListener(mainActivity, new OnSuccessListener<Location>() {
                             @Override
                             public void onSuccess(Location location) {
 
@@ -86,7 +91,7 @@ public class ScanTask implements Runnable {
                                         pushData.put(scanResult.BSSID, new JSONObject()
                                                 .put("bssid", scanResult.BSSID)
                                                 .put("ssid", scanResult.SSID));
-                                    } catch (JSONException e) {
+                                    } catch (JSONException ignored) {
 
                                     }
                                 }
@@ -95,7 +100,7 @@ public class ScanTask implements Runnable {
 
                                 String result = "Ein Fehler ist aufgetreten.";
                                 try {
-                                    String urlString = "https://wlan.dev.k118.de/entry/?trainID=" + MainActivity.getInstance().inpBahnID.getText().toString() + "&catchMacQuery=" + URLEncoder.encode(pushData.toString());
+                                    String urlString = "https://wlan.dev.k118.de/entry/?trainID=" + mainActivity.inpBahnID.getText().toString() + "&catchMacQuery=" + URLEncoder.encode(pushData.toString());
                                     if (location != null)
                                         urlString += "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude();
                                     result = new WebRequest(new URL(urlString), "").doInBackground();
@@ -103,7 +108,7 @@ public class ScanTask implements Runnable {
                                     e.printStackTrace();
                                 }
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
                                 builder.setMessage(result)
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -113,7 +118,7 @@ public class ScanTask implements Runnable {
                                         });
                                 AlertDialog alert = builder.create();
                                 alert.show();
-                                MainActivity.buttonScan.setEnabled(true);
+                                mainActivity.buttonScan.setEnabled(true);
 
                                 tv.setText("");
                             }

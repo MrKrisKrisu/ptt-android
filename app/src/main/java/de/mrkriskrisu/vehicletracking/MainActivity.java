@@ -4,12 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,64 +20,52 @@ import android.os.StrictMode;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.evernote.android.job.JobManager;
-
-import java.util.concurrent.TimeUnit;
-
-import de.mrkriskrisu.vehicletracking.tasks.UploadWorker;
-
 public class MainActivity extends AppCompatActivity {
 
     public static WifiManager wifiManager;
-    public static Button buttonScan;
-    public static Button buttonLocate;
-    public static EditText inpBahnID;
+    public Button buttonScan;
+    public Button buttonLocate;
+    public EditText inpBahnID;
 
-    private static NotificationManagerCompat notificationManager;
-
-    private static MainActivity instance;
-
-    public static MainActivity getInstance() {
-        return instance;
-    }
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        instance = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         createNotificationChannel();
 
-        inpBahnID = MainActivity.getInstance().findViewById(R.id.inpBahnID);
+        inpBahnID = this.findViewById(R.id.inpBahnID);
 
         buttonScan = findViewById(R.id.btnCapture);
-        buttonScan.setOnClickListener(new CaptureManager());
+        buttonScan.setOnClickListener(new CaptureManager(this));
 
         buttonLocate = findViewById(R.id.btnLocate);
-        buttonLocate.setOnClickListener(new LocateManager());
+        buttonLocate.setOnClickListener(new LocateManager(this));
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         if (!wifiManager.isWifiEnabled())
             wifiManager.setWifiEnabled(true);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED)
-            showPermissionPopup();
-        else if (ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED)
-            showPermissionPopup();
-        else if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED)
-            showPermissionPopup();
-        else if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            showPermissionPopup();
-        else if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            showPermissionPopup();
-        else if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
-            showPermissionPopup();
+        //check that we have all necessary permission, if not prompt the user
+        String[] permissions = new String[] {
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET
+        };
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                showPermissionPopup();
+                break;
+            }
+        }
 
         //Regelmäßiger Cron zum Vehicle tracken
         /*
@@ -91,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPermissionPopup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+        final Activity activity = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Die App benötigt Zugriff auf den Standort des Gerätes. Bitte erlaube den Zugriff in den Einstellungen.")
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        ActivityCompat.requestPermissions(MainActivity.getInstance(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                     }
                 });
         AlertDialog alert = builder.create();
@@ -122,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static NotificationManagerCompat getNotificationManager() {
+    public NotificationManagerCompat getNotificationManager() {
         return notificationManager;
     }
 }
