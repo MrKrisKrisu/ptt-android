@@ -61,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET
         };
         for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 showPermissionPopup();
+                break;
+            }
         }
 
         //Regelmäßiger Cron zum Vehicle tracken
