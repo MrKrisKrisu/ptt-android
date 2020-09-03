@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="10dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,35 +19,36 @@
         android:autofillHints="@string/enter_vehicle_name"
         android:inputType="text" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCapture"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:layout_margin="15dp"
         android:background="@color/colorPrimary"
-        android:text="@string/submit_data" />
+        android:text="@string/submit_data"
+        app:icon="@drawable/wifi"
+        style="@style/Widget.MaterialComponents.Button.Icon"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_captureResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="" />
-    <Button
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLocate"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:layout_margin="15dp"
         android:background="@color/colorPrimary"
-        android:text="@string/locate"/>
+        android:text="@string/locate"
+        app:icon="@drawable/crosshairs_gps"
+        style="@style/Widget.MaterialComponents.Button.Icon"/>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvDisclaimer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
