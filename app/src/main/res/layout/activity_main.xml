@@ -9,13 +9,14 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Diese App lokalisiert Fahrzeuge des öffentlichen Verkehrs. Aktuell werden nur Fahrzeuge der Verkehrsbetriebe in Hannover unterstützt." />
-
+        android:text="@string/main_intro" />
 
     <EditText
         android:id="@+id/inpBahnID"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/enter_vehicle_name"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/btnCapture"
@@ -24,7 +25,7 @@
         android:layout_gravity="bottom"
         android:layout_margin="15dp"
         android:background="@color/colorPrimary"
-        android:text="Daten erfassen" />
+        android:text="@string/submit_data" />
 
     <TextView
         android:id="@+id/tv_captureResult"
@@ -38,8 +39,7 @@
         android:layout_gravity="bottom"
         android:layout_margin="15dp"
         android:background="@color/colorPrimary"
-        android:text="Lokalisieren"/>
-
+        android:text="@string/locate"/>
 
     <Space
         android:layout_width="match_parent"
@@ -51,6 +51,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="Diese App steht in keinem Zusammenhang mit den Unternehmen GVH, Üstra oder RegioBus. Dies ist ein reines Privatprojekt." />
+        android:text="@string/main_disclaimer" />
 
 </LinearLayout>
