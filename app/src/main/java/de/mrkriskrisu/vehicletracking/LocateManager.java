@@ -9,6 +9,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -40,10 +41,13 @@ public class LocateManager implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        ProgressBar spinner = mainActivity.findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
+        mainActivity.buttonLocate.setEnabled(false);
+
         mainActivity.registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         wifiManager.startScan();
         Toast.makeText(mainActivity, "Fahrzeuge werden lokalisiert...", Toast.LENGTH_SHORT).show();
-        mainActivity.buttonLocate.setEnabled(false);
     }
 
     final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
@@ -104,6 +108,8 @@ public class LocateManager implements View.OnClickListener {
 
                     @Override
                     public void onFinish() {
+                        ProgressBar spinner = mainActivity.findViewById(R.id.progressBar);
+                        spinner.setVisibility(View.GONE);
                         mainActivity.buttonLocate.setEnabled(true);
                     }
                 });
