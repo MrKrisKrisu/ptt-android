@@ -7,8 +7,8 @@ android {
         applicationId "de.mrkriskrisu.vehicletracking"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 5
-        versionName "0.1"
+        versionCode 6
+        versionName "0.1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
