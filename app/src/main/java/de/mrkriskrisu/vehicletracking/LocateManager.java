@@ -54,7 +54,7 @@ public class LocateManager implements View.OnClickListener {
                 String jsonQuery = parseJsonRequest(wifiManager.getScanResults());
 
                 AsyncHttpClient client = new AsyncHttpClient();
-                client.post(null, "https://vehicletracking.de/api/vehicle/locate", new StringEntity(jsonQuery), "application/json", new JsonHttpResponseHandler() {
+                client.post(null, "https://verkehrstracking.de/api/vehicle/locate", new StringEntity(jsonQuery), "application/json", new JsonHttpResponseHandler() {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
